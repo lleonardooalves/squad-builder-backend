@@ -1,98 +1,117 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Squad Builder — Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API REST do **Squad Builder**, um app de montar times de futebol. Este repositório é o backend
+(em construção) que serve os dados para o app mobile em React Native.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+![NestJS](https://img.shields.io/badge/NestJS-11-E0234E?logo=nestjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-6-2D3748?logo=prisma&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
 
-## Description
+![Swagger UI](docs/screenshots/overview.png)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Sobre o projeto
 
-## Project setup
+O Squad Builder começou como um app mobile (React Native + Expo) onde os dados dos jogadores
+eram mockados no próprio front. A ideia sempre foi ser fullstack, então este backend nasceu para
+tirar os dados do dispositivo e centralizá-los em um servidor com banco de dados de verdade.
 
-```bash
-$ npm install
-```
+Este é um projeto de estudo — minha primeira imersão real em backend Node.js. O foco é entender
+cada peça (não só fazer funcionar): containers, ORM, migrations, injeção de dependência e
+arquitetura em camadas.
 
-## Compile and run the project
+## Stack
 
-```bash
-# development
-$ npm run start
+- **[NestJS 11](https://nestjs.com/)** — framework Node.js com TypeScript
+- **[Prisma 6](https://www.prisma.io/)** — ORM (schema declarativo, migrations, client tipado)
+- **[PostgreSQL 16](https://www.postgresql.org/)** — banco relacional, rodando em **Docker**
+- **[class-validator](https://github.com/typestack/class-validator)** — validação declarativa dos DTOs
+- **[Swagger / OpenAPI](https://swagger.io/)** — documentação interativa gerada automaticamente
 
-# watch mode
-$ npm run start:dev
+## O que já está pronto
 
-# production mode
-$ npm run start:prod
-```
+- CRUD completo do recurso **Player** (`GET`, `POST`, `PATCH`, `DELETE`)
+- Modelo `Player` no Postgres com enums (`Position`, `Form`) e atributos flexíveis em coluna `Json`
+- Validação de entrada nos DTOs (enums, limites de valor, URL, campos obrigatórios)
+- Documentação interativa da API em `/docs`
 
-## Run tests
+## Como rodar localmente
 
-```bash
-# unit tests
-$ npm run test
+### Pré-requisitos
 
-# e2e tests
-$ npm run test:e2e
+- [Node.js](https://nodejs.org/) 18+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (para o Postgres)
 
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Passos
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# 1. Instalar dependências
+npm install
+
+# 2. Criar o .env a partir do exemplo
+cp .env.example .env
+
+# 3. Subir o banco Postgres (Docker)
+docker compose up -d
+
+# 4. Aplicar as migrations e gerar o Prisma Client
+npx prisma migrate dev
+
+# 5. Rodar em modo desenvolvimento (com hot reload)
+npm run start:dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+A API sobe em `http://localhost:3000`.
 
-## Resources
+- **Documentação (Swagger):** http://localhost:3000/docs
+- **Prisma Studio** (painel visual do banco): `npx prisma studio` → http://localhost:5555
 
-Check out a few resources that may come in handy when working with NestJS:
+## Endpoints
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+| Método | Rota           | Descrição                |
+| ------ | -------------- | ------------------------ |
+| GET    | `/players`     | Lista todos os jogadores |
+| GET    | `/players/:id` | Busca um jogador por id  |
+| POST   | `/players`     | Cria um jogador          |
+| PATCH  | `/players/:id` | Atualiza um jogador      |
+| DELETE | `/players/:id` | Remove um jogador        |
 
-## Support
+## Documentação da API
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+A documentação é gerada automaticamente a partir dos controllers e DTOs — sem escrita duplicada.
+O schema do `CreatePlayerDto` (à esquerda) espelha exatamente as regras de validação definidas no
+código, e o `Try it out` executa requisições reais contra o banco (à direita).
 
-## Stay in touch
+| Schema do DTO                                | Resposta real                                |
+| -------------------------------------------- | -------------------------------------------- |
+| ![Schema](docs/screenshots/createPlayer.png) | ![Response](docs/screenshots/getPlayers.png) |
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Estrutura de pastas
 
-## License
+```
+squad-builder-backend/
+├── prisma/
+│   ├── schema.prisma        # definição das tabelas (models) e enums
+│   └── migrations/          # histórico versionado de mudanças do banco
+├── src/
+│   ├── main.ts              # bootstrap: ValidationPipe global + Swagger
+│   ├── app.module.ts        # módulo raiz
+│   ├── prisma/              # PrismaService + PrismaModule (global)
+│   └── players/             # feature: controller, service, module, DTOs
+├── docker-compose.yml       # Postgres 16
+└── .env.example             # modelo das variáveis de ambiente
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## Roadmap
+
+- [x] Setup do banco (Postgres + Docker)
+- [x] Integração com Prisma (schema, migrations, PrismaService)
+- [x] CRUD de players com validação de DTO
+- [x] Documentação da API com Swagger
+- [ ] Autenticação com JWT (users, login, guards)
+- [ ] Favoritos por usuário
+- [ ] Squads por usuário (com regras de formação: 4-3-3, máx. 11, limites por posição)
+- [ ] Seed do banco
+- [ ] Conectar o app mobile à API
+- [ ] Deploy
