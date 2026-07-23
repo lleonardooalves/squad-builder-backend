@@ -36,6 +36,8 @@ model Player {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
+  favorites Favorite[]
+
   @@map("players")
 }
 
@@ -47,5 +49,19 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  favorites Favorite[]
+
   @@map("users")
+}
+
+model Favorite {
+  userId    String
+  playerId  String
+  createdAt DateTime @default(now())
+
+  user   User @relation(fields: [userId], references:[id], onDelete: Cascade)
+  player Player @relation(fields: [playerId], references:[id], onDelete:Cascade)
+
+  @@id([userId, playerId])
+  @@map("favorites")
 }
