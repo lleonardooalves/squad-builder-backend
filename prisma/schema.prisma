@@ -23,6 +23,11 @@ enum Form {
   cold
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model Player {
   id         String   @id @default(uuid())
   name       String
@@ -52,6 +57,8 @@ model User {
 
   favorites Favorite[]
   squadPlayers SquadPlayer[]
+
+  role Role @default(USER)
 
   @@map("users")
 }
