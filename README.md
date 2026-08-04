@@ -51,6 +51,9 @@ autenticação e arquitetura em camadas.
   experiência; o servidor valida para garantir a regra.
 - **Isolamento por usuário**: o cliente nunca envia de quem é o dado. O `userId` vem do token,
   então não há como ler ou alterar os dados de outra pessoa.
+- **Controle de acesso por papel**: usuários têm papel `USER` ou `ADMIN`, e apenas
+  administradores podem alterar o catálogo de jogadores. O papel é lido do banco a cada
+  requisição, e não do token, então uma mudança de permissão tem efeito imediato.
 - **Documentação automática** em `/docs`, gerada a partir dos controllers e DTOs.
 
 ## Como rodar localmente
@@ -101,13 +104,17 @@ Em produção essas variáveis ficam no painel do provedor, nunca no repositóri
 
 ### Players
 
-| Método | Rota           | Descrição                | Auth |
-| ------ | -------------- | ------------------------ | ---- |
-| GET    | `/players`     | Lista todos os jogadores | ‑    |
-| GET    | `/players/:id` | Busca um jogador por id  | ‑    |
-| POST   | `/players`     | Cria um jogador          | ‑    |
-| PATCH  | `/players/:id` | Atualiza um jogador      | ‑    |
-| DELETE | `/players/:id` | Remove um jogador        | ‑    |
+| Método | Rota           | Descrição                | Auth     |
+| ------ | -------------- | ------------------------ | -------- |
+| GET    | `/players`     | Lista todos os jogadores | ‑        |
+| GET    | `/players/:id` | Busca um jogador por id  | ‑        |
+| POST   | `/players`     | Cria um jogador          | 🔒 admin |
+| PATCH  | `/players/:id` | Atualiza um jogador      | 🔒 admin |
+| DELETE | `/players/:id` | Remove um jogador        | 🔒 admin |
+
+O catálogo é público para leitura e restrito para escrita. Como a API está exposta na internet,
+deixar as rotas de escrita abertas permitiria que qualquer pessoa apagasse jogadores, o que,
+por conta do `onDelete: Cascade`, levaria junto os favoritos e times de todos os usuários.
 
 ### Auth
 
@@ -135,6 +142,9 @@ Em produção essas variáveis ficam no painel do provedor, nunca no repositóri
 | DELETE | `/squads`           | Limpa o time                            | 🔒   |
 
 🔒 = exige o header `Authorization: Bearer <token>`
+🔒 admin = exige, além do token, um usuário com papel `ADMIN`
+
+Sem token a resposta é **401**. Com token válido, mas sem permissão, é **403**.
 
 ## Documentação da API
 
@@ -193,6 +203,7 @@ squad-builder-backend/
 - [x] Seed do banco
 - [x] Conectar o app mobile à API
 - [x] Deploy
+- [x] Controle de acesso por papel (admin) nas rotas de escrita
 - [ ] Testes automatizados
 - [ ] Paginação e filtros no catálogo de jogadores
 - [ ] Refresh token
