@@ -1,3 +1,5 @@
+![CI](https://github.com/lleonardooalves/squad-builder-backend/actions/workflows/ci.yml/badge.svg)
+
 # Squad Builder — Backend
 
 API REST do **Squad Builder**, um app de montar times de futebol. Este repositório é o backend
