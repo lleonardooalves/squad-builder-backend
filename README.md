@@ -1,5 +1,3 @@
-![CI](https://github.com/lleonardooalves/squad-builder-backend/actions/workflows/ci.yml/badge.svg)
-
 # Squad Builder — Backend
 
 API REST do **Squad Builder**, um app de montar times de futebol. Este repositório é o backend
@@ -11,6 +9,7 @@ que serve os dados para o app mobile em React Native.
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
 ![JWT](https://img.shields.io/badge/Auth-JWT-000000?logo=jsonwebtokens&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
+![CI](https://github.com/lleonardooalves/squad-builder-backend/actions/workflows/ci.yml/badge.svg)
 
 **API no ar:** https://squad-builder-api-ri3o.onrender.com
 **Documentação (Swagger):** https://squad-builder-api-ri3o.onrender.com/docs
@@ -99,6 +98,7 @@ A API sobe em `http://localhost:3000`.
 | `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | Credenciais do container Postgres (dev)        |
 | `DATABASE_URL`                                        | String de conexão usada pelo Prisma            |
 | `JWT_SECRET`                                          | Chave usada para assinar e verificar os tokens |
+| `CORS_ORIGINS`                                        | Origens que podem consumir a API pelo navegador, separadas por vírgula |
 
 Em produção essas variáveis ficam no painel do provedor, nunca no repositório.
 
