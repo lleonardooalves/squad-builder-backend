@@ -16,12 +16,16 @@ type RawPlayer = {
   rating: number;
   form: Form;
   attributes: Prisma.InputJsonValue;
+  /** Foto real do jogador. Sem ela, o seed gera um placeholder com as iniciais. */
+  image?: string;
 };
 
 const rawPlayers: RawPlayer[] = [
   // ---------------- Goleiros (GK) ----------------
   {
     name: 'Weverton',
+    image:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxirfziOMl7Ns1o1qAYQGpZkDQJkbTr5zi9oLnMSvyeD9SoEJvtMsWpbo&s=10',
     team: 'Palmeiras',
     position: 'GK',
     price: 45,
@@ -37,6 +41,8 @@ const rawPlayers: RawPlayer[] = [
   },
   {
     name: 'Agustín Rossi',
+    image:
+      'https://s2-ge.glbimg.com/jC06IsuRDNpO9M0IVFBNgWHPryc=/0x0:1638x2047/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_bc8228b6673f488aa253bbcb03c80ec5/internal_photos/bs/2025/N/k/ujtidKRmqAj8YxsAA8VQ/54510923752-a2d51292b7-k.jpg',
     team: 'Flamengo',
     position: 'GK',
     price: 42,
@@ -67,6 +73,8 @@ const rawPlayers: RawPlayer[] = [
   },
   {
     name: 'Hugo Souza',
+    image:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1LUM7C5HFido7Lo11skfqa9Wl5gMKByz3XuPqhrM_ILFX68EmwmzuN43r&s=10',
     team: 'Corinthians',
     position: 'GK',
     price: 38,
@@ -522,10 +530,12 @@ function initials(name: string): string {
   return (parts[0][0] + parts[1][0]).toUpperCase();
 }
 
-const players: Prisma.PlayerCreateManyInput[] = rawPlayers.map(
-  (player, index) => ({
+export const players: Prisma.PlayerCreateManyInput[] = rawPlayers.map(
+  ({ image, ...player }, index) => ({
     id: String(index + 1),
-    image: `https://placehold.co/200x200/1e293b/ffffff?text=${initials(player.name)}`,
+    image:
+      image ??
+      `https://placehold.co/200x200/1e293b/ffffff?text=${initials(player.name)}`,
     ...player,
   }),
 );
@@ -540,11 +550,15 @@ async function main() {
   console.log(`Seed concluído: ${players.length} jogadores inseridos.`);
 }
 
-main()
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  })
-  .finally(() => {
-    void prisma.$disconnect();
-  });
+// Só roda quando o arquivo é executado direto (npx prisma db seed).
+// Sem esta guarda, importar `players` daqui dispararia o seed, que apaga a tabela.
+if (require.main === module) {
+  main()
+    .catch((error) => {
+      console.error(error);
+      process.exit(1);
+    })
+    .finally(() => {
+      void prisma.$disconnect();
+    });
+}
